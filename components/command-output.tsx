@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Copy, Check, Terminal } from "lucide-react"
+import { Copy, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CommandOutputProps {
@@ -19,27 +19,19 @@ export function CommandOutput({ command, selectedCount }: CommandOutputProps) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  if (selectedCount === 0) {
+    return null
+  }
+
   return (
-    <div className="w-full rounded-2xl bg-card border border-border shadow-xl overflow-hidden">
-      <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Terminal className="h-5 w-5 text-primary" />
-          <span className="text-sm font-medium text-foreground">
-            Installation Command
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            {selectedCount} app{selectedCount !== 1 ? "s" : ""} selected
-          </span>
+    <div className="w-full rounded-xl bg-card border border-border shadow-2xl overflow-hidden">
+      <div className="bg-emerald-500 px-4 py-3 text-white">
+        <div className="flex items-center justify-between">
+          <span className="font-medium">Nice!</span>
           <button
             onClick={handleCopy}
-            disabled={!command}
             className={cn(
-              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all",
-              command
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
+              "flex items-center gap-1.5 rounded-lg bg-white/20 px-3 py-1.5 text-sm font-medium transition-all hover:bg-white/30"
             )}
           >
             {copied ? (
@@ -50,22 +42,25 @@ export function CommandOutput({ command, selectedCount }: CommandOutputProps) {
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                Copy
+                Copy Command
               </>
             )}
           </button>
         </div>
       </div>
-      <div className="p-4">
-        {command ? (
-          <pre className="overflow-x-auto rounded-lg bg-foreground/5 p-4 text-sm text-foreground font-mono whitespace-pre-wrap break-all">
-            {command}
-          </pre>
-        ) : (
-          <div className="flex items-center justify-center py-8 text-muted-foreground">
-            <p>Select apps above to generate an install command</p>
-          </div>
-        )}
+      <div className="p-4 space-y-3">
+        <p className="text-sm text-muted-foreground">
+          To install selected apps ({selectedCount}), copy and paste this command into a Terminal...
+        </p>
+        <pre className="overflow-x-auto rounded-lg bg-zinc-900 text-zinc-100 p-4 text-sm font-mono whitespace-pre-wrap break-all">
+          {command}
+        </pre>
+        <p className="text-sm text-muted-foreground">
+          ...hit Enter and wait for your apps to be installed!
+        </p>
+        <p className="text-xs text-muted-foreground">
+          <strong>TIP</strong> You can find <strong>Terminal.app</strong> in the Utilities folder inside your Applications folder or by searching in Spotlight.
+        </p>
       </div>
     </div>
   )
